@@ -1,17 +1,32 @@
 import React from "react";
 import "./App.css";
 
-const AppContext = React.createContext();
-const AppContextInitialState = {
-  thatMessage: "Hoi from state!"
+const MessageContext = React.createContext();
+const MessageContextInitialState = {
+  thatMessage: "Hallo uit"
+};
+
+const CitiesContext = React.createContext();
+const CitiesContextInitialState = {
+  thatCity: "Amsterdam"
 };
 
 const App = () => (
-  <AppContext.Provider value={AppContextInitialState}>
-    <AppContext.Consumer>
-      {state => <h1>{state.thatMessage}</h1>}
-    </AppContext.Consumer>
-  </AppContext.Provider>
+  <MessageContext.Provider value={MessageContextInitialState}>
+    <CitiesContext.Provider value={CitiesContextInitialState}>
+      <MessageContext.Consumer>
+        {messages => (
+          <CitiesContext.Consumer>
+            {cities => (
+              <h1>
+                {messages.thatMessage} {cities.thatCity}!
+              </h1>
+            )}
+          </CitiesContext.Consumer>
+        )}
+      </MessageContext.Consumer>
+    </CitiesContext.Provider>
+  </MessageContext.Provider>
 );
 
 export default App;
