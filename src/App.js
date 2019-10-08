@@ -1,8 +1,17 @@
 import React from "react";
 import "./App.css";
 
-function App() {
-  return <h1>hoi!</h1>;
-}
+const AppContext = React.createContext();
+const AppContextInitialState = {
+  thatMessage: "Hoi from state!"
+};
+
+const App = () => (
+  <AppContext.Provider value={AppContextInitialState}>
+    <AppContext.Consumer>
+      {state => <h1>{state.thatMessage}</h1>}
+    </AppContext.Consumer>
+  </AppContext.Provider>
+);
 
 export default App;
