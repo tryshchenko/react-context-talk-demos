@@ -1,10 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import "./App.css";
+
+const fib = n => (n <= 1 ? 1 : fib(n - 1) + fib(n - 2));
 
 const AppContext = React.createContext();
 AppContext.displayName = "AppContext";
 
+const RenderAnotherMessage = ({ context }) => {
+  console.log("Render of passive component");
+  fib(40);
+  return <h2>{context.otherMessage}</h2>;
+};
+
 const MessageComponent = () => {
+  console.log("Render of active component");
   const context = useContext(AppContext);
   return (
     <div>
@@ -17,10 +26,30 @@ const MessageComponent = () => {
   );
 };
 
+const AnotherMessageComponent = () => {
+  const context = useContext(AppContext);
+  return (
+    <div>
+      <RenderAnotherMessage context={context} />
+    </div>
+  );
+  // return useMemo(
+  //   () => (
+  //     <div>
+  //       <RenderAnotherMessage context={context} />
+  //     </div>
+  //   ),
+  //   [context.otherMessage]
+  // );
+};
+
 const AppContextProvider = ({ children }) => {
   const [thatMessage, setThatMessage] = useState("Hello Amsterdam!");
+  const [otherMessage, setOtherMessage] = useState("Bye Rotterdam");
   return (
-    <AppContext.Provider value={{ thatMessage, setThatMessage }}>
+    <AppContext.Provider
+      value={{ thatMessage, otherMessage, setOtherMessage, setThatMessage }}
+    >
       {children}
     </AppContext.Provider>
   );
@@ -29,6 +58,7 @@ const AppContextProvider = ({ children }) => {
 const App = () => (
   <AppContextProvider>
     <MessageComponent />
+    <AnotherMessageComponent />
   </AppContextProvider>
 );
 
