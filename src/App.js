@@ -1,55 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./App.css";
 
-// Let's not talk about re-rendering and performance here, it's just a demo!
-const composeConsumers = consumers => TargetComponent =>
-  consumers.reduce(
-    (Component, componentTuple) => {
-      const Wrapper = componentTuple[0];
-      const stateName = componentTuple[1];
-      return props => (
-        <Wrapper>
-          {state => {
-            const namedState = {
-              [stateName]: state
-            };
-            return <Component {...namedState} {...props} />;
-          }}
-        </Wrapper>
-      );
-    },
-    props => <TargetComponent {...props} />
-  );
+const AppContext = React.createContext();
+AppContext.displayName = "AppContext";
 
-const MessageContext = React.createContext();
-MessageContext.displayName = "MessageContext";
-const MessageContextInitialState = {
-  thatMessage: "Hallo uit"
+const MessageComponent = () => {
+  const context = useContext(AppContext);
+  return <h1>{context.thatMessage}</h1>;
 };
-
-const CitiesContext = React.createContext();
-CitiesContext.displayName = "CitiesContext";
-const CitiesContextInitialState = {
-  thatCity: "Amsterdam"
-};
-
-const MessageComponent = ({ messages, cities, normalProp }) => (
-  <h1>
-    {messages.thatMessage} {cities.thatCity}! {normalProp}
-  </h1>
-);
-
-const StatefulMessageComponent = composeConsumers([
-  [MessageContext.Consumer, "messages"],
-  [CitiesContext.Consumer, "cities"]
-])(MessageComponent);
 
 const App = () => (
-  <MessageContext.Provider value={MessageContextInitialState}>
-    <CitiesContext.Provider value={CitiesContextInitialState}>
-      <StatefulMessageComponent normalProp="Doe normaal!" />
-    </CitiesContext.Provider>
-  </MessageContext.Provider>
+  <AppContext.Provider value={{ thatMessage: "Hello Amsterdam" }}>
+    <MessageComponent normalProp="Doe normaal!" />
+  </AppContext.Provider>
 );
 
 export default App;
