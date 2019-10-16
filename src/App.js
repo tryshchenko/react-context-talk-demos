@@ -45,7 +45,7 @@ const AnotherMessageComponent = () => {
 
 const AppContextProvider = ({ children }) => {
   const [thatMessage, setThatMessage] = useState("Hello Amsterdam!");
-  const [otherMessage, setOtherMessage] = useState("Bye Rotterdam");
+  const [otherMessage, setOtherMessage] = useState("Bye Wrocław!");
   return (
     <AppContext.Provider
       value={{ thatMessage, otherMessage, setOtherMessage, setThatMessage }}
